@@ -3,6 +3,10 @@
 
 class PID {
 public:
+  //pos and window_size
+  int pos,window_size;
+  double sum,*window;
+
   /*
   * Errors
   */
