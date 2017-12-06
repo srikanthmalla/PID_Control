@@ -26,16 +26,17 @@ void PID::Init(double Kp, double Ki, double Kd) {
   window= (double *)calloc(window_size,sizeof(double));
 }
 
-void PID::UpdateError(double cte) {
+void PID::UpdateError(double cte, double dt) {
   double cte_old=p_error;
-  d_error=cte-cte_old;
+  d_error=(cte-cte_old)/dt;;
   p_error=cte;
-  i_error=sum+cte-window[pos];
+  i_error=sum-window[pos]+(cte*dt);
   window[pos]=cte;
   pos=(pos+1)%window_size;
 }
 
-double PID::TotalError() {
-  return Kp*p_error+Kd*d_error+Ki*i_error;
+double PID::TotalError(double speed) {
+  return (Kp - 0.0032 * speed) * p_error + Ki * i_error + (Kd + 0.0002 * speed) * d_error;
+  // return Kp*p_error+Kd*d_error+Ki*i_error;
 }
 
